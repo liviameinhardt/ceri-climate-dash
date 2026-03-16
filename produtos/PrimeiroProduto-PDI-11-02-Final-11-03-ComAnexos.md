@@ -145,14 +145,14 @@ ENERGIA BRASIL .................................................................
 4  Bases de dados meteorológicos e climáticos .............................................. 33
 4.1  Bases de dados nacionais ............................................................................................. 33
 
-4.2  Principais conjuntos internacionais ............................................................................. 42
-5  Conclusões .................................................................................................... 48
+4.2  Principais conjuntos internacionais ............................................................................. 41
+5  Conclusões .................................................................................................... 47
 
-6  Referências ................................................................................................... 51
+6  Referências ................................................................................................... 50
 
-7  Glossário ....................................................................................................... 53
+7  Glossário ....................................................................................................... 52
 
-8  Anexos .......................................................................................................... 56
+8  Anexos .......................................................................................................... 55
 
 Página 4
 
@@ -182,15 +182,13 @@ resiliência a eventos climáticos extremos;
 
 A Fundação Getulio Vargas (FGV) é a executora do projeto contratado pela  ISA ENERGIA
 
-BRASIL,  que  conta  com  a  parceria  da  Empresa  de  Planejamento  Estratégico  (EPE).  A
+BRASIL, que conta com a parceria da Empresa de Pesquisa Energética (EPE). A participação
 
-participação da EPE tem o objetivo de garantir que a experiência de seus técnicos sobre o tema
+da  EPE  tem  o  objetivo  de  garantir  que  a  experiência  de  seus  técnicos  sobre  o  tema  seja
 
-seja devidamente apropriada pelo projeto. A participação da EPE também tem o objetivo  de
+devidamente apropriada pelo projeto, bem como de que os seus achados gerem externalidades
 
-que  os  achados  obtidos  ao  longo  do  PDI  gerem  externalidades  positivas  para  todos  o  Setor
-
-Elétrico Brasileiro (SEB).
+positivas para todos o Setor Elétrico Brasileiro (SEB).
 
 A lista de produtos que serão gerados por este PDI, bem como uma breve descrição de seus
 
@@ -200,7 +198,7 @@ PRODUTO 1: Relatório de revisão da modelagem climática da ISA ENERGIA BRASIL
 
 O Produto 1, constituído por este documento, tem como objetivo avaliar a modelagem
 
-climática e da metodologia de análise de riscos utilizada pela ISA ENERGIA BRASIL
+climática e a metodologia de análise de riscos utilizada pela ISA ENERGIA BRASIL
 
 em seus esforços anteriores para tratar a resiliência de seus ativos a eventos climáticos
 
@@ -1205,21 +1203,23 @@ desligamento por incêndios florestais.
 
 Inundações fluviais
 
-A seção ameaça de inundação fluvial distinguindo o transbordamento de rios principais (cheias
+A seção ameaça de inundação fluvial trata exclusivamente do transbordamento de rios, canais,
 
-fluviais) de alagamentos pluviais urbanos, e integrando índices climáticos padrão do (𝑅𝑥1𝑑𝑎𝑦,
+açudes  e  similares  (cheias  fluviais),  não  tratando  de  alagamentos  causados  por  falhas  nos
 
-𝑅95𝑝, 𝑅𝑋𝑋𝑚𝑚) com um Índice Morfométrico (IM) baseado em ordem de canais, declividade,
+sistemas  de  drenagem.  A  abordagem  faz  uso  de  índices  climáticos  padrão  (𝑅𝑥1𝑑𝑎𝑦,  𝑅95𝑝,
 
-distâncias  vertical/horizontal  aos  rios.  Os  pesos  hidrologicamente  coerentes  priorizam  áreas
+𝑅𝑋𝑋𝑚𝑚),  combinados  com  um  Índice  Morfométrico  (IM)  baseado  em  ordem  de  canais,
 
-planas de várzea próximas a rios de maior ordem.
+declividade,  distâncias  vertical/horizontal  aos  rios.  Os  pesos  hidrologicamente  coerentes
 
-Entre as limitações, destacam:
+priorizam áreas planas de várzea próximas a rios de maior ordem.
 
 Página 23
 
-•  Soma  variáveis  medidas  em  unidades  diferentes  não  normalizadas  (mm  +  dias  +
+Entre as limitações, destacam:
+
+•  Soma  variáveis  medidas  em  unidades  diferentes  não  normalizadas  (mm  +  dias  +
 
 adimensional), causando dominância de 𝑅𝑥1𝑑𝑎𝑦;
 
@@ -1272,11 +1272,11 @@ alteração nos padrões de ventos pela equação:
 
 2
 
-na qual:
-
 Página 24
 
-•  𝑊𝑋1𝑑𝑎𝑦 representa a máxima velocidade (média) do vento atingida em determinado
+na qual:
+
+•  𝑊𝑋1𝑑𝑎𝑦 representa a máxima velocidade (média) do vento atingida em determinado
 
 dia do ano; e
 
@@ -2247,8 +2247,6 @@ energia, extremos, hidrologia).
 
 Página 39
 
-Página 40
-
 Tabela 3 Fontes públicas de dados meteorológicos e hidrometeorológicos – Brasil
 
 Cobertura espacial
@@ -2345,8 +2343,7 @@ cao.cemaden+2
 Volume de chuvas
 (pluviometria),
 nível de rios,
-vazão (descarga
-líquida),
+vazão,
 evaporação,
 sedimentos em
 suspensão,
@@ -2595,11 +2592,11 @@ granularidade do
 BDMEP)[basedo
 sdados]
 
-Página 41
+Fonte: FGV CERI.
 
-Fonte: FGV CERI.
+Página 40
 
-4.2  Principais conjuntos internacionais
+4.2  Principais conjuntos internacionais
 
 4.2.1  ERA5 – Reanálise global (ECMWF/Copernicus)
 
@@ -2653,15 +2650,15 @@ radiação de onda curta/longa (fluxos à superfície e no topo), pressão ao n�
 
 mar, umidade específica/relativa, neve, evapotranspiração, etc.
 
-Página 42
-
-o  Níveis de pressão: campos 3D de temperatura, vento, umidade, geopotencial em
+o  Níveis de pressão: campos 3D de temperatura, vento, umidade, geopotencial em
 
 137 níveis da superfície a ~80 km.
 
 •  URLs:
 
-o  Descrição
+Página 41
+
+o  Descrição
 
 ERA5
 
@@ -2719,9 +2716,7 @@ estação,  visibilidade,  precipitação  acumulada  em  vários  períodos,  p
 
 condições presentes. Atualmente, mais de 14.000 estações ativas são atualizadas diariamente,
 
-Página 43
-
-totalizando cerca de 600 GB não comprimidos, com controle de qualidade automatizado para
+totalizando cerca de 600 GB não comprimidos, com controle de qualidade automatizado para
 
 formatação, valores extremos, consistência entre parâmetros e continuidade temporal.
 
@@ -2733,7 +2728,9 @@ temperatura, ponto de orvalho, pressão ao nível do mar e na estação, visibil
 
 do vento, além de máximas/mínimas de temperatura, rajada máxima sustentada, precipitação
 
-total, profundidade de neve e indicadores de tempo (neblina, tempestades etc.). Disponível em
+Página 42
+
+total, profundidade de neve e indicadores de tempo (neblina, tempestades etc.). Disponível em
 
 formato fixo de largura e hospedado em repositórios como AWS Open Data, o GSOD é ideal
 
@@ -2785,9 +2782,7 @@ ISD / Global Hourly: https://www.ncei.noaa.gov/products/land-based-
 
 station/integrated-surface-database
 
-Página 44
-
-o  Busca de dados (Global Hourly):
+o  Busca de dados (Global Hourly):
 
 https://www.ncei.noaa.gov/access/search/data-search/global-hourly
 
@@ -2801,7 +2796,9 @@ NASA,  fundado  em  1917  como  Langley  Memorial  Aeronautical  Laboratory  pel
 
 (precursora  da  NASA),  localizado  em  Hampton,  Virgínia,  EUA.  Inicialmente  focado  em
 
-pesquisa aeronáutica com túneis de vento pioneiros (incluindo o maior do mundo na época, de
+Página 43
+
+pesquisa aeronáutica com túneis de vento pioneiros (incluindo o maior do mundo na época, de
 
 30x60 pés), o LaRC expandiu-se para ciências espaciais durante a era Apollo, contribuindo com
 
@@ -2847,9 +2844,7 @@ Abaixo  são  apresentadas,  rapidamente,  algumas  características  das  bases
 
 disponibilizadas pelo NASA POWER:
 
-Página 45
-
-•  Tipo de dado: meteorologia de superfície, energia solar e climatologia para aplicações
+•  Tipo de dado: meteorologia de superfície, energia solar e climatologia para aplicações
 
 em energia, agricultura e construção.
 
@@ -2865,7 +2860,9 @@ várias décadas; detalhes por variável na documentação.
 
 horária.
 
-•  Variáveis principais (exemplos):
+Página 44
+
+•  Variáveis principais (exemplos):
 
 o  Meteorologia: temperatura a 2 m (T2M), umidade, pressão à superfície, vento
 
@@ -2889,7 +2886,7 @@ project.org/package=nasapower
 
 A Tabela 4 apresenta um resumo das fontes e dados internacionais disponíveis.
 
-Página 46
+Página 45
 
 Tabela 4 Fontes públicas de dados meteorológicos e hidrometeorológicos – Internacionais
 Fonte /
@@ -2902,10 +2899,10 @@ Tipo de dado
 principal
 
 Cobertura
-temporal
+espacial
 
 Cobertura
-espacial
+temporal
 
 URLs principais
 
@@ -3062,7 +3059,7 @@ wer
 
 Fonte: FGV CERI.
 
-Página 47
+Página 46
 
 5  Conclusões
 
@@ -3124,7 +3121,7 @@ grau  de  detalhamento  e  a  aplicabilidade  operacional  direta  dos  resultad
 
 tratadas como oportunidades de aprimoramento metodológico. Em particular, observa-se que:
 
-Página 48
+Página 47
 
 •  As análises não incorporam explicitamente modos de variabilidade climática de grande
 
@@ -3192,13 +3189,13 @@ Em  síntese,  o  projeto  mapeia  e  prioriza  ameaças  climáticas  físicas 
 
 oferecendo uma base para a gestão de riscos climáticos. Ao mesmo tempo, apresenta espaço
 
-Página 49
+Página 48
 
 claro  para  aprofundamentos  metodológicos  que  podem  aumentar  significativamente  sua
 
 relevância operacional e seu valor para o planejamento de médio e longo prazo da companhia.
 
-Página 50
+Página 49
 
 6  Referências
 
@@ -3271,7 +3268,7 @@ Corrente  de  Descargas  Atmosféricas:  Aplicação  às  Medições  da  Esta�
 Cachimbo. 2001. Tese (Doutorado) – Universidade Federal de Minas Gerais, Belo Horizonte,
 2001. Disponível em: https://www.ppgee.ufmg.br/defesas/683M.PDF.
 
-Página 51
+Página 50
 
 SOARES, R. V. Determinação de um índice de perigo de incêndio para a região centro
 paranaense, Brasil. 1972. Dissertação (Mestrado) – Instituto Interamericano de Ciências
@@ -3291,7 +3288,7 @@ and  monitoring  of  extreme  weather  and  climate  events.  2018.  Disponível
 https://library.wmo.int/viewer/58396/download?file=1310_Guidelines_on_DEWCE_en.pdf&
 type=pdf&navigator=1. Acesso em: 11/fev./2026.
 
-Página 52
+Página 51
 
 7
 
@@ -3343,7 +3340,7 @@ baseado  em  umidade  relativa,  vento  e  seca,  fundamentado  nos  estudos  de
 GSSR (Global Storm Surge Reanalysis): Reanálise global utilizada para a estimativa de
 ressacas e níveis extremos do mar (𝑇𝑅100 e 𝑇𝑅1000) (Muis et al. 2016).
 
-Página 53
+Página 52
 
 𝑯𝒕𝒊𝒅𝒆: Nível da água durante eventos de maré alta, utilizado na modelagem de ameaças
 costeiras em combinação com ressacas e aumento do nível do mar.
@@ -3393,7 +3390,7 @@ convectivas e tempestades intensas.
 𝑹𝒙𝟓𝒅𝒂𝒚: Máxima precipitação acumulada em 5 dias consecutivos, principal gatilho para
 deslizamentos devido à saturação prolongada do solo.
 
-Página 54
+Página 53
 
 𝑹𝑿𝑿𝒎𝒎:  Número  de  dias  anuais  com  precipitação  considerada  outlier  (acima  do  95º
 percentil regional).
@@ -3417,7 +3414,7 @@ de determinada magnitude (ex: 𝑇𝑅100 possui 1% de chance de ocorrer anualme
 𝑾𝑿𝟏𝒅𝒂𝒚: Máxima velocidade média diária de vento registrada em um ano, expressa em
 𝑚/𝑠.
 
-Página 55
+Página 54
 
 8
 
@@ -3473,5 +3470,752 @@ climática e validação do sumário executivo.
 
 •  Arquivo: Reunião-FGVCERI-ISAEnergiaBrasil-04-02-2026.pptx
 
-Página 56
+Página 55
+
+Resiliência da Transmissão
+de Energia Elétrica
+a Eventos Climáticos
+Extremos
+
+Reunião de Kick Off
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+Objetivos
+
+Construir  um  dashboard/plataforma  de  gestão  de  riscos  climáticos
+
+associados  às
+
+linhas  de  transmissão  da  Isa  Energia  Brasil.  O
+
+dashboard  deverá  antecipar  riscos  e  contribuir  para  a  avaliação  da
+
+vulnerabilidade das linhas e impactos no serviço.
+
+A partir dele será possível:
+
+• Analisar custos e benefícios de investimentos
+
+• Propor aprimoramentos regulatórios
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+A Abordagem a ser utilizada
+
+O projeto de PDI será iniciado contemplando os avanços já obtidos
+
+pela  Isa  Energia  Brasil  na  modelagem  climática  para  antecipar
+
+riscos e na avaliação da vulnerabilidade das linhas.
+
+Missões Internacionais
+
+O  projeto  prevê  a  realização  de  missões  internacionais  para  entender  como  outros  países  estão  lidando
+com temas relacionados aos que são abordados neste projeto de PDI. Alguns possíveis destinos:
+
+EUA:  Nova  Jersey  e  Pensilvânia,  Nova  York,  Flórida,  Lousiana,  Arkansas.  Reuniões  com  reguladores,
+operadores e empresas que possuem experiência em lidar com furações, inundações por conta de eventos
+como Katrina, Sandy, entre outros.
+
+China: Grande sistema de inovação global, com uso de tecnologia em infraestrutura e experiência em lidar
+com clima árido e enchentes.
+
+Japão: Benchmark em resiliência pela ocorrência constante de terremotos. Cidade projetada pela Toyota é
+referência em inovações em infraestrutura.
+
+Noruega  e  Suécia:  Polos  de  inovação  energética  e  otimização  para  extremos  climáticos.  Laboratório  da
+Cruz Vermelha atuou na enchente do RS.
+
+Mestrado Profissional
+
+O  projeto  prevê  a  realização  de  um  curso  de  mestrado
+
+profissional  em  Economia  na  Escola  de  Pós-Graduação  em
+
+Economia  da  Fundação  Getulio  Vargas  (FGV  EPGE),  com  ênfase
+
+em  economia  da  infraestrutura  e  regulação.  O  mestrado  tem  a
+
+duração prevista de dois anos.
+
+Modelagem dos Impactos
+do Clima na Transmissão
+
+A modelagem dos impactos na transmissão envolve:
+
+• Uso da modelagem já realizada pela Isa Energia Brasil
+
+na avaliação da vulnerabilidade das linhas e impactos
+
+em serviço
+
+•
+
+•
+
+Identificação de oportunidades e implementação
+
+daquelas que forem aprovadas pela Isa Energia Brasil
+
+Discussão de premissas com profissionais da Isa
+
+Energia Brasil para simulação dos impactos dos
+
+eventos futuros
+
+Modelagem de Engenharia e
+Finanças
+
+• Construção de alternativas que contemplem aumento de resiliência e
+
+adaptação das instalações
+
+•
+
+Simulação de impactos com uso de novos equipamentos
+
+• Definição de preços de referência para custear alternativas
+
+• Avaliação de ajustes na metodologia do Mínimo Custo Global
+
+• Metodologia robusta de Análise de Custo-Benefício (CBA)
+
+O Elo Social da
+Resiliência em
+Infraestrutura:
+Avaliando a
+Vulnerabilidade
+Social a interrupções
+de Longa Duração
+
+14
+
+Vulnerabilidade Social a Interrupções de Longa Duração Decorrentes de
+Eventos Climáticos Extremos - O IVS CERI
+
+Criação de uma medida para avaliar a
+vulnerabilidade social por meio do grau de preparação para
+emergências, saúde e capacidade de evacuação
+
+15
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+Premissas
+
+• Os  dados,  documentos  e  informações  de  propriedade  da  Isa  Energia
+
+Brasil  necessários  para  o  desenvolvimento  do  projeto
+
+serão
+
+disponibilizados tempestivamente e em formato acessível
+
+• Haverá  uma  equipe  da
+
+Isa  Energia  Brasil  que
+
+responderá
+
+tempestivamente as dúvidas das equipes da FGV e Facto Energy
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+Principais Produtos:
+Relatórios de Modelagem de Engenharia
+
+• Caracterização das linhas e equipamentos
+
+• Custos de alternativas de investimentos em resiliência
+
+• Custos de uso das medidas corretivas
+
+Principais Produtos:
+Relatórios de Modelagem Financeira
+
+• Criação de Matriz de Riscos adaptada a eventos extremos/resiliência de
+
+redes
+
+•
+
+Simulação dos impactos dos eventos extremos em diferentes cenários de
+
+investimentos, de mudanças climáticas e de compartilhamento de riscos
+
+• Análise Custo-Benefício (CBA) de diferentes escolhas de investimento em
+
+resiliência
+
+• Apresentação dos resultados associados ao Mínimo Custo Global
+
+• Reporte Público de Riscos Físicos em linha com a IFRS S2
+
+Principais Produtos: Dashboard de
+Adaptação de Ativos
+
+Principais Produtos: Relatório de
+Aprimoramento Regulatório
+
+• Discussão sobre investimentos prudentes em resiliência e fontes de
+
+financiamento
+
+• Avaliação da necessidade de repartição dos riscos associados a eventos
+
+climáticos extremos entre a transmissora e poder concedente
+
+• Avaliação de modelos e mecanismos de compartilhamento de riscos entre
+
+os diferentes stakeholders, bem como possibilidades de seguros
+
+• Discussão de mecanismos de incentivo para reações a ocorrências
+
+climáticas
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+Cronograma de entregas
+(a partir da entrega de documentos e dados)
+
+Agenda
+
+• Objetivos
+• Escopo
+• Premissas
+• Roadmap
+• Time
+• Riscos Mapeados
+
+Time
+
+Z
+
+Diretora - Joisa Dutra
+Dra. em Economia
+
+Edson Gonçalves
+Dr. em Economia
+
+Rafael Martins de Souza
+Dr. em Economia
+
+Salman  Mohaghueghui
+PhD. em Engenharia
+Elétrica
+
+Diogo Lisbona
+Dr. em Economia
+
+Vivian Figer
+Dra. em Economia
+
+Dario Oliveira
+PhD. em Matemática
+
+Luciana Costa
+Dra. em Economia
+
+Gustavo Kaercher
+Dr. em Direito
+
+Agenda
+
+•Objetivos
+•Escopo
+•Premissas
+•Roadmap
+•Time
+•Riscos Mapeados
+
+Riscos Mapeados
+
+• Atraso ou falha na entrega de dados de estudos já realizados ou
+
+necessários para o desenvolvimento do projeto
+
+• Atraso ou falha na entrega de documentos de estudos já realizados ou
+
+necessários para o desenvolvimento do projeto
+
+• Demora na resolução de dúvidas a respeito dos dados e documentos
+
+enviados pela equipe da Isa Energia Brasil
+
+Muito obrigado!
+
+Resiliência da Transmissão
+de Energia Elétrica
+a Eventos Climáticos
+Extremos
+
+Reunião de 07-01-2026
+
+Agenda
+
+Primeira análise da modelagem climática conforme documentos
+fornecidos pela ISA ENERGIA BRASIL (ISA CTEEP).
+
+Objetivo e Escopo
+A modelagem visa identificar, quantificar e priorizar riscos climáticos
+para aumentar a resiliência da infraestrutura de transmissão (linhas e
+subestações).
+
+O estudo abrange 284 linhas de transmissão (cerca de 22 mil km) e
+129 subestações no estado de São Paulo.
+
+O objetivo final é subsidiar um Plano de Adaptação e Resiliência
+Climática que oriente investimentos e ações operacionais.
+
+Base Metodológica e Cenários
+A modelagem foi desenvolvida com o suporte da consultoria WayCarbon e
+utiliza dados do CMIP6 (Coupled Model Intercomparison Project Phase 6),
+alinhados ao Sexto Relatório de Avaliação do IPCC (AR6).
+
+Cenários de Emissões (SSPs): Foram considerados três cenários: SSP1-2.6
+(otimista), SSP2-4.5 (intermédio) e SSP3-7.0 (pessimista/políticas atuais). O
+cenário SSP3-7.0 foi priorizado para a análise de risco e priorização de ativos,
+pois reflete uma trajetória de aquecimento mais severa (aprox. 3,6°C até 2100),
+garantindo uma avaliação conservadora da segurança.
+
+Horizontes Temporais: A análise compara um período histórico (1995-2014)
+com projeções para 2030 (curto prazo), 2040 (médio) e 2050 (longo).
+
+Matriz de Risco
+O nível de risco de cada ativo é calculado pela fórmula:
+
+Risco = (Probabilidade x Vulnerabilidade) x Criticidade.
+
+Probabilidade (Ameaça): Baseada na tendência de intensificação de
+indicadores climáticos extremos (frequência, duração e severidade) modelados
+no software MOVE.
+
+Vulnerabilidade: Avalia a suscetibilidade técnica do ativo (ex: histórico de
+quedas, características do terreno, premissas de projeto originais).
+
+Criticidade: Baseada no procedimento interno (PRO.OP36), ponderando
+impactos Financeiros, Sistêmicos (importância para a rede), Reputacionais, de
+Segurança e Ambientais.
+
+Ameaças Climáticas Modeladas (I)
+Tempestades (Descargas Atmosféricas): Como os modelos climáticos não
+projetam raios diretamente, a modelagem utiliza uma combinação de
+precipitação extrema (RX1day, R99p) e ventos fortes (WX1day) como proxy
+para tempestades severas e incidência de raios.
+
+Ventos Extremos: Inicialmente, a modelagem usou ventos médios (WX1day e
+W90p) devido a limitações dos modelos globais. Para o estudo detalhado de
+engenharia, foi aplicada a Distribuição de Gumbel para converter dados
+históricos e projeções em rajadas de 3 segundos, considerando tempos de
+recorrência de 150 e 250 anos, conforme normas técnicas (NBR 5422).
+
+Ameaças Climáticas Modeladas (II)
+Incêndios Florestais: Utiliza a Fórmula de Monte Alegre Alterada (FMA+), que
+cruza dados de umidade e vento com o tipo de vegetação (MapBiomas) e
+topografia (declividade e orientação das encostas) para estimar o risco de
+propagação do fogo.
+
+Inundações Fluviais: Combina projeções de chuvas extremas (RX1day, R95p)
+com um Índice Morfométrico (derivado do modelo digital de elevação) para
+identificar áreas próximas a cursos d'água propensas a transbordamento. Não
+cobre alagamentos urbanos por drenagem insuficiente.
+
+Deslizamentos: Analisa a precipitação acumulada (RX5day - 5 dias
+consecutivos) combinada com o Índice de Suscetibilidade do Solo (ISS), que
+considera geologia, declividade e uso do solo.
+
+Ameaças Climáticas Modeladas (III)
+Temperaturas Máximas e Ondas de Calor: Avalia a frequência de ondas de
+calor (HW.N) e o aumento da temperatura máxima média (TMAX). Para linhas
+de transmissão, o impacto é verificado simulando a ampacidade e o aumento
+da flecha (dilatação dos cabos) conforme a norma IEEE 738-2006, para garantir
+distâncias de segurança.
+
+Aumento do Nível do Mar: Combina dados da NASA sobre elevação do nível
+do mar com projeções de eventos de ressaca (maré meteorológica) para
+identificar ativos costeiros em risco de inundação.
+
+Planos de Ação e Soluções Propostas
+
+Com base na modelagem, a Isa desenvolveu planos de ação específicos para
+os ativos priorizados:
+
+Para Ventos: Reforço estrutural (torres estaiadas ou de ancoragem), uso de
+grampos deslizantes para evitar efeito cascata e instalação de estações
+anemométricas.
+
+Para Incêndios: Uso de câmeras off-grid, sensores IoT e plataforma de
+monitoramento SMAC (Climatempo).
+
+Para Inundações: Monitoramento via satélite/IoT e elevação de equipamentos
+em subestações críticas.
+
+Para Temperatura: Monitoramento com espaçadores inteligentes para aferir a
+temperatura real dos cabos e validar o modelo teórico.
+
+Dúvidas e Solicitações (I)
+
+Levantamento de dados e métodos de previsão
+É possível fornecer os dados e a especificação dos métodos utilizados nas previsões de eventos climáticos futuros, com
+destaque para ventos e descargas atmosféricas?
+
+Distribuições estatísticas adotadas
+Quais foram as distribuições estatísticas foram assumidas para cada evento climático na transformação dos valores brutos
+de probabilidade para seus equivalentes normalizados entre 0 e 1.
+
+Validação dos cálculos
+Considerando que os dados utilizados abrangem o período de 1994 a 2014, é possível utilizar os registros de 2014 a 2025
+para validar os cálculos realizados?
+
+Linhas de transmissão e normas aplicáveis
+Realizar o levantamento dos dados relevantes dos ativos, incluindo, por exemplo, o ano de construção das linhas de
+transmissão e as normas vigentes à época, com o objetivo de verificar sua capacidade de suportar novos eventos climáticos
+e, a partir dessa análise, calcular as probabilidades de falha.
+
+Georreferenciamento
+Como é feito o georreferenciamento dos resultados para as linhas de transmissão? Os resultados apresentados para as
+linhas de transmissão são apresentados por trechos? Como são definidos estes trechos?
+
+Dúvidas e Solicitações (II)
+
+Ativos com problemas atuais
+É possível identificar os ativos que já apresentam problemas, indicando as melhorias necessárias para adequação às
+normas? É possível fornecer também os dados referentes à quantidade de desligamentos ocorridos em decorrência desses
+problemas?
+
+Incidência de descargas atmosféricas
+Considerando o aumento substancial das taxas de incidência de descargas atmosféricas nas últimas duas ou três décadas,
+avaliar se:
+• valores médios anuais devem ser evitados;
+• valores únicos para uma linha de transmissão devem ser evitados, dado que seus trajetos abrangem regiões com
+
+características orográficas distintas. Verificar se situação semelhante ocorre nas avaliações de ventos, onde valores
+médios foram assumidos.
+
+Capacidade de absorção de energia dos cabos para-raios
+Esclarecer se existem valores de energia máxima que podem ser absorvidos pelos tentos que compõem os cabos para-raios
+(convencionais ou OPGW). Caso contrário, indicar qual parâmetro é utilizado pela Isa para avaliar a suportabilidade desses
+cabos em relação às correntes de descargas atmosféricas, especialmente a componente de corrente contínua.
+
+Eventos críticos
+Avaliar se todos os eventos devem ser considerados e definir quais são os mais críticos para análise.
+
+Muito obrigado!
+
+Resiliência da Transmissão
+de Energia Elétrica
+a Eventos Climáticos
+Extremos
+
+Reunião de 14-01-2026
+
+Objeto
+
+Segunda discussão sobre a análise da modelagem climática
+conforme documentos fornecidos pela ISA ENERGIA BRASIL
+(ISA CTEEP).
+
+Agenda
+
+• Preparativas para a reunião missão internacional
+• Pontos adicionais sobre as dúvidas
+• Modelagem de valores extremos
+• Primeiros achados sobre a modelagem de tempestade
+
+Comentários sobre as
+perguntas apresentadas na
+última reunião
+
+Primeira Pergunta
+
+Quais distribuições estatísticas foram assumidas para cada evento climático na transformação dos valores
+brutos de probabilidade para seus equivalentes normalizados entre 0 e 1?
+
+Resposta: Não indica a probabilidade exata do evento, mas mostra se os extremos projetados são mais
+severos ou frequentes que no passado.
+
+Réplica: Todo conjunto composto de variáveis aleatórias contínuas possui suas funções densidade e
+distribuição acumulada de probabilidade. A primeira é a derivada da segunda e, portanto, a segunda é a
+integral da primeira. Nesta perspectiva, a pergunta não foi adequadamente respondida. O que se pretendia
+com a pergunta é conhecer a função matemática.
+
+Oportunidade de aprimoramento: Formalização das distribuições de probabilidade usadas para modelar os
+fenômenos climáticos.
+
+Demais perguntas
+
+As demais perguntas foram esclarecidas.
+
+Modelagem de Valores Extremos
+
+A teoria dos valores extremos é a área da Estatística que estuda a
+
+distribuição dos valores máximos e mínimos de uma variável
+
+aleatória de interesse, sendo que no âmbito deste estudo o
+
+interesse é a utilização da teoria dos valores máximos. O modelo de
+
+distribuição de valores extremos generalizado (GEV) é a família de
+
+distribuições de probabilidade para valores máximos, que inclui as
+
+distribuições de Gumbel, Fréchet e Weibull.
+
+Distribuição Generalizada de Valores
+Extremos
+
+Considerando X uma variável aleatória com distribuição GEV, sua função de distribuição poder ser:
+
+Com                              na qual os parâmetros a, b, c são a localização, escala e forma, respectivamente.
+
+Oespaço de parâmetros é dado por
+
+Possíveis Aplicações da Modelagem de
+Valores Extremos
+
+Tempestades (Descargas Atmosféricas): Como os modelos climáticos não projetam raios diretamente, a
+modelagem utiliza uma combinação de precipitação extrema (RX1day, R99p) e ventos fortes (WX1day) como
+proxy para tempestades severas e incidência de raios.
+
+Ventos Extremos: Inicialmente, a modelagem usou ventos médios (WX1day e W90p) devido a limitações dos
+modelos globais. Para o estudo detalhado de engenharia, foi aplicada a Distribuição de Gumbel para
+converter dados históricos e projeções em rajadas de 3 segundos, considerando tempos de recorrência de
+150 e 250 anos, conforme normas técnicas (NBR 5422).
+
+Temperaturas Máximas e Ondas de Calor: Avalia a frequência de ondas de calor (HW.N) e o aumento da
+temperatura máxima média (TMAX). Para linhas de transmissão, o impacto é verificado simulando a
+ampacidade e o aumento da flecha (dilatação dos cabos) conforme a norma IEEE 738-2006, para garantir
+distâncias de segurança.
+
+Muito obrigado!
+
+Resiliência da Transmissão
+de Energia Elétrica
+a Eventos Climáticos
+Extremos
+
+Reunião de 29-01-2026
+
+Resiliência da Transmissão
+de Energia Elétrica
+a Eventos Climáticos
+Extremos
+
+Dúvidas sobre a Modelagem Climática
+
+Modelagem
+
+Como  foi  feita  a  modelagem  de  probabilidades  de
+ocorrência  de  valores  extremos  para  cada  uma  das
+ameaças?
+
+Dados
+
+É possível no repassar o conjunto de dados utilizados e
+produzidos durante o projeto?
+
+Projeções
+
+Como  as  probabilidades  foram  projetadas,  de  acordo
+com cada um dos cenários climáticos?
+
+Muito obrigado!
+
+Resiliência da Transmissão
+de Energia Elétrica
+a Eventos Climáticos
+Extremos
+
+Reunião de 04-02-2026
+
+Objeto
+
+Terceira discussão sobre a análise da modelagem climática
+conforme documentos fornecidos pela ISA ENERGIA BRASIL
+(ISA CTEEP).
+
+Agenda
+
+Repercussão da reunião com profissionais da WayCarbon e
+discussão sobre a primeira versão do Produto I
+
+Estimação das Probabilidades
+Introdução & Problema
+
+•
+
+•
+
+•
+
+•
+
+Conceito de "Valor Bruto" indefinido: Documento não define formalmente o que
+é "valor bruto" para extremos climáticos
+
+Falta de precisão metodológica: Conversão para escala 0-1 via função de
+densidade não está descrita com clareza
+
+Período de referência: Características climáticas naturais de 1950-1994 usadas
+como baseline
+
+Lacuna crítica: Processo de identificação do modelo probabilístico não foi
+explicitado
+
+Estimação das Probabilidades
+Problemas Identificados
+
+•
+
+•
+
+•
+
+•
+
+•
+
+Correlação entre extremos (frequência, duração, severidade) não é transparente
+
+Índice proposto não expressa probabilidade absoluta da ocorrência do evento
+
+Impacto associado também não é capturado explicitamente
+
+Uso de conceitos não consagrados na Teoria Estatística
+
+Falta de reprodutibilidade desejável em modelagem científica
+
+Estimação das Probabilidades
+Interpretação do Documento
+
+• Valor médio próximo a 50% → extremos semelhantes ao clima de referência
+
+• Valores acima de 50% → maior intensidade de extremos projetados
+
+• Atenção: Mesmo valor médio de 50% implica persistência de condições extremas
+
+significativas
+
+•
+
+Intensidade, frequência, duração aumentam com deslocamento para direita
+
+Estimação das Probabilidades
+Amostra & Base de Dados
+
+• Dados diários de 1950 a 1994 → ~16.425 observações por variável climática
+
+• Múltiplas variáveis climáticas analisadas
+
+• Série temporal suficientemente longa para estimação estatística robusta
+
+• Hipótese de estacionariedade das séries é razoável
+
+Estimação das Probabilidades
+Metodologia Estatística Recomendada
+
+• Especificar modelos probabilísticos teóricos com base em literatura
+
+• Estimar parâmetros a partir dos dados coletados
+
+• Realizar testes estatísticos formais para validação dos modelos
+
+• Aplicar o mesmo rigor para distribuições conjuntas (correlações, dependências)
+
+• Garantir estimação formal vs. procedimentos ad-hoc
+
+Estimação das Probabilidades
+Detecção de Mudanças Climáticas
+
+• Teste 1: Detecção formal de tendências nos dados
+
+• Teste 2: Análise de proporção de eventos nos quantis superiores
+
+• Comparar quantis teóricos (referência) vs. empíricos (projeção)
+
+• Se quantis projetados >> quantis teóricos → evidência robusta de extremos mais
+
+frequentes
+
+• Metodologia baseada em cauda direita das distribuições
+
+Estimação das Probabilidades
+Por Que a Abordagem Atual é Inadequada
+
+• Conceito de "probabilidade absoluta" não existe em teoria estatística
+
+• Análise simplista de "valor médio próximo a 50%" é insuficiente
+
+• Falta de testes estatísticos formais compromete conclusões
+
+• Não há validação rigorosa do ajuste dos modelos aos dados
+
+•
+
+Impossibilidade de reprodução por terceiros
+
+Estimação das Probabilidades
+Caminhos para Melhoria
+
+• Documentar explicitamente toda modelagem probabilística
+
+•
+
+Implementar testes estatísticos formais para validação
+
+• Adotar metodologia consagrada para análise de eventos extremos
+
+• Próximos relatórios devem incorporar melhorias sugeridas
+
+• Objetivo: Aumentar robustez, transparência e reprodutibilidade
+
+Estimação das Probabilidades
+
+Muito obrigado!
 
