@@ -103,13 +103,41 @@ Para instalar pacotes R adicionais, ver "exemplo-de-aula.ipynb".
 - [IRkernel](https://irkernel.github.io/)
 - [GitHub Codespaces](https://github.com/features/codespaces)
 
-## Referências
 
-- Fávero, L. P.; Belfiore, P. Manual de Análise de Dados. 1ª Edição. Rio de Janeiro: Elsevier, 2017.
-- Book, Velleman, De Veaux; Stats: Modeling the World. Pearson, 2016.
-- Statistics: the art and science of learning from data; Agresti, Franklin, Klingenberg; 2007.
-- The Art of Statistics: How to Learn from Data; David Spiegelhalter.
-- Inteligência Computacional: Fundamentos e Aplicações; Alexandre Evsukoff; 2020.
+### Como fazer clone de repositório com arquivos grandes
+
+#### Instalar Git LFS
+```bash
+# Ubuntu/Debian
+sudo apt install git-lfs
+
+# MacOS
+brew install git-lfs
+
+# Windows - baixar de: https://git-lfs.github.io/
+```
+
+#### Configurar Git LFS
+```bash
+# Inicializar Git LFS (uma vez por usuário)
+git lfs install
+```
+
+#### Clonar com Git LFS
+```bash
+# Método padrão (mais lento)
+git clone https://github.com/usuario/repositorio.git
+```
+
+#### Método otimizado (mais rápido)
+git lfs clone https://github.com/usuario/repositorio.git
+
+*Diferenças entre os Métodos*
+
+git clone: Baixa arquivos LFS um por vez durante o checkout
+
+git lfs clone: Baixa arquivos LFS em lote após completar o clone (muito mais rápido)
+
 
 ## 🤝 Contribuindo
 
@@ -121,7 +149,7 @@ Este projeto é de código aberto e está disponível para uso educacional.
 
 
 
-
+---- anexo
 
 
 # Para ativar julius-code no ps1
