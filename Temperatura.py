@@ -1,0 +1,362 @@
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import streamlit as st
+
+
+RISK_DIR = Path("processed_data/temperature")
+RISK_FILES = {
+    "P90": RISK_DIR / "risk_table_P90.csv",
+    "P95": RISK_DIR / "risk_table_P95.csv",
+    "P99": RISK_DIR / "risk_table_P99.csv",
+}
+HIST_FILE = RISK_DIR / "histograms.npz"
+
+SCENARIOS = ["SSP1-2.6", "SSP2-4.5", "SSP3-7.0"]
+DATE_RANGES = ["2021-2040", "2031-2050", "2041-2060"]
+
+
+@st.cache_data(show_spinner=False)
+def _load_risk_table_cached(path_str: str, mtime: float) -> pd.DataFrame:
+    return pd.read_csv(path_str)
+
+
+def load_risk_table(limit_name: str) -> pd.DataFrame:
+    path = RISK_FILES[limit_name]
+    if not path.exists():
+        raise FileNotFoundError(f"Missing file: {path}")
+    return _load_risk_table_cached(str(path), path.stat().st_mtime)
+
+
+@st.cache_resource(show_spinner=False)
+def load_histograms() -> dict:
+    if not HIST_FILE.exists():
+        return {}
+    data = np.load(HIST_FILE, allow_pickle=True)
+    lines = list(data["lines"])
+    combos = list(data["combos"])
+    return {
+        "lines": lines,
+        "combos": combos,
+        "line_to_idx": {name: i for i, name in enumerate(lines)},
+        "combo_to_idx": {label: j for j, label in enumerate(combos)},
+        "counts": data["counts"],
+        "bin_edges": data["bin_edges"],
+        "total_samples": data["total_samples"],
+    }
+
+
+def _get_hist_counts(hist: dict, line_name: str, scenario_label: str, date_range: str):
+    combo_key = f"{scenario_label}__{date_range}"
+    i = hist["line_to_idx"].get(line_name)
+    j = hist["combo_to_idx"].get(combo_key)
+    if i is None or j is None:
+        return None
+    counts = hist["counts"][i, j, :]
+    total = int(hist["total_samples"][i, j])
+    if total == 0:
+        return None
+    return counts, total
+
+
+def build_first_section_table(
+    df: pd.DataFrame, weights: dict[str, float], date_range: str
+) -> pd.DataFrame:
+    df_future = df[df["scenario"].isin(SCENARIOS)].copy()
+    df_future = df_future[df_future["date_range"] == date_range].copy()
+
+    grouped = (
+        df_future.groupby(["linha", "scenario"], as_index=False)
+        .agg(
+            n_days_in_scenario=("days_exceeding", "sum"),
+            limit_C=("limit_C", "first"),
+        )
+    )
+
+    wide = (
+        grouped.pivot(index="linha", columns="scenario", values="n_days_in_scenario")
+        .reindex(columns=SCENARIOS)
+        .fillna(0)
+    )
+
+    weighted_score = sum(wide[sc] * weights[sc] for sc in SCENARIOS)
+
+    result = wide.reset_index().rename(
+        columns={
+            "linha": "line_name",
+            "SSP1-2.6": "count_ssp1_2_6",
+            "SSP2-4.5": "count_ssp2_4_5",
+            "SSP3-7.0": "count_ssp3_7_0",
+        }
+    )
+
+    limit_by_line = (
+        df_future.groupby("linha", as_index=False)["limit_C"]
+        .first()
+        .rename(columns={"linha": "line_name", "limit_C": "temperature_limit_c"})
+    )
+
+    result = result.merge(limit_by_line, on="line_name", how="left")
+    total_days = float(df_future["total_days"].dropna().iloc[0]) if not df_future.empty else np.nan
+    result["pct_ssp1_2_6"] = (100 * result["count_ssp1_2_6"] / total_days).round(2)
+    result["pct_ssp2_4_5"] = (100 * result["count_ssp2_4_5"] / total_days).round(2)
+    result["pct_ssp3_7_0"] = (100 * result["count_ssp3_7_0"] / total_days).round(2)
+    result["weighted_score"] = weighted_score.values
+    result["rank"] = result["weighted_score"].rank(method="dense", ascending=False)
+
+    result["temperature_limit_c"] = result["temperature_limit_c"].round(2)
+    result["weighted_score"] = result["weighted_score"].round(2)
+    result["rank"] = result["rank"].astype(int)
+
+    return result.sort_values(["rank", "weighted_score"], ascending=[True, False]).reset_index(
+        drop=True
+    )
+
+
+def build_tables_by_date_range(
+    df: pd.DataFrame, weights: dict[str, float]
+) -> dict[str, pd.DataFrame]:
+    return {dr: build_first_section_table(df, weights, dr) for dr in DATE_RANGES}
+
+
+def get_default_riskiest_line(tables: dict[str, pd.DataFrame]) -> str | None:
+    all_scores = []
+    for dr in DATE_RANGES:
+        table = tables.get(dr)
+        if table is None or table.empty:
+            continue
+        all_scores.append(table[["line_name", "weighted_score"]])
+    if not all_scores:
+        return None
+    merged = pd.concat(all_scores, ignore_index=True)
+    risk = merged.groupby("line_name", as_index=False)["weighted_score"].sum()
+    risk = risk.sort_values("weighted_score", ascending=False)
+    if risk.empty:
+        return None
+    return str(risk.iloc[0]["line_name"])
+
+
+def get_line_percentile_limit_c(df: pd.DataFrame, line_name: str) -> float | None:
+    vals = df.loc[df["linha"] == line_name, "limit_C"].dropna()
+    if vals.empty:
+        return None
+    return float(vals.iloc[0])
+
+
+def get_percentile_limits_c_for_line(line_name: str) -> dict[str, float]:
+    limits = {}
+    for name in ["P90", "P95", "P99"]:
+        df_lim = load_risk_table(name)
+        v = get_line_percentile_limit_c(df_lim, line_name)
+        if v is not None:
+            limits[name] = v
+    return limits
+
+
+def main() -> None:
+    st.set_page_config(page_title="Painel de Risco de Temperatura", layout="wide")
+    st.title("Painel de Risco de Temperatura")
+
+    st.sidebar.header("Filtros")
+    limit_name = st.sidebar.selectbox(
+        "Percentil do limite de temperatura",
+        options=["P90", "P95", "P99"],
+        index=2,
+        # help="Selecione qual tabela de risco usar em processed_data/temperature/.",
+    )
+
+    st.sidebar.subheader("Pesos dos cenários")
+    w1 = st.sidebar.number_input("Peso SSP1-2.6", min_value=0, value=1, step=1)
+    w2 = st.sidebar.number_input("Peso SSP2-4.5", min_value=0, value=1, step=1)
+    w3 = st.sidebar.number_input("Peso SSP3-7.0", min_value=0, value=1, step=1)
+
+    weight_sum = w1 + w2 + w3
+    if weight_sum <= 0:
+        st.sidebar.error("At least one scenario weight must be greater than zero.")
+        st.stop()
+
+    weights = {
+        "SSP1-2.6": w1 / weight_sum,
+        "SSP2-4.5": w2 / weight_sum,
+        "SSP3-7.0": w3 / weight_sum,
+    }
+
+    st.sidebar.caption(
+        "Pesos brutos: "
+        f"{int(w1)} {int(w2)} {int(w3)}  →  "
+        "Pesos normalizados usados no rank: "
+        f"SSP1-2.6={weights['SSP1-2.6']:.2f}, "
+        f"SSP2-4.5={weights['SSP2-4.5']:.2f}, "
+        f"SSP3-7.0={weights['SSP3-7.0']:.2f}"
+    )
+
+    df = load_risk_table(limit_name)
+    tables_by_dr = build_tables_by_date_range(df, weights)
+
+    st.header("Rank das linhas por excedência ponderada")
+    st.write(
+        "Cada aba mostra um horizonte temporal. O rank é calculado pela soma ponderada "
+        "das contagens de cada cenário e depois rankeados em ordem decrescente."
+    )
+
+    with st.expander("Como o rank é calculado"):
+        st.markdown(
+            """
+            Para cada linha de transmissão \(i\), calcula-se um **score agregado de risco climático** por meio da soma ponderada das contagens de dias acima do limiar em cada cenário:
+
+            $$
+            \t{score}_i =
+            (n_{i,\mathrm{SSP1-2.6}} \cdot w_1) +
+            (n_{i,\mathrm{SSP2-4.5}} \cdot w_2) +
+            (n_{i,\mathrm{SSP3-7.0}} \cdot w_3)
+            $$
+
+            em que:
+
+            - $n_{i,s}$ = número de dias em que a temperatura máxima da linha \(i\) excede o limiar no cenário \(s\);
+            - $w_s$ = peso atribuído ao cenário \(s\), normalizado para que a soma dos pesos seja igual a 1.
+
+            **Pesos adotados:**
+
+            $$
+            w_{\mathrm{SSP1-2.6}} = %.2f,\quad
+            w_{\mathrm{SSP2-4.5}} = %.2f,\quad
+            w_{\mathrm{SSP3-7.0}} = %.2f
+            $$
+
+            Em seguida, as linhas são ordenadas em função do escore calculado, em ordem decrescente:
+            Assim, o **rank 1** corresponde à linha com maior exposição ponderada a excedências térmicas no horizonte avaliado.
+            """
+            % (weights["SSP1-2.6"], weights["SSP2-4.5"], weights["SSP3-7.0"])
+        )
+    tabs = st.tabs(DATE_RANGES)
+    for tab, dr in zip(tabs, DATE_RANGES):
+        with tab:
+            table = tables_by_dr[dr].copy()
+            show_table = table.drop(columns=["weighted_score", "count_ssp1_2_6", "count_ssp2_4_5", "count_ssp3_7_0"], errors="ignore")
+            st.caption(
+                "Cada linha representa uma transmissão. As colunas percentuais mostram "
+                "a fração dos dias do intervalo em que a linha excedeu o limiar selecionado. "
+                "O rank 1 indica maior risco ponderado nesta aba."
+            )
+            st.dataframe(
+                show_table,
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "line_name": st.column_config.TextColumn("Nome da linha"),
+                    "temperature_limit_c": st.column_config.NumberColumn(
+                        "Limite de temperatura (°C)", format="%.2f"
+                    ),
+                    "pct_ssp1_2_6": st.column_config.NumberColumn("% dias SSP1-2.6", format="%.2f%%"),
+                    "pct_ssp2_4_5": st.column_config.NumberColumn("% dias SSP2-4.5", format="%.2f%%"),
+                    "pct_ssp3_7_0": st.column_config.NumberColumn("% dias SSP3-7.0", format="%.2f%%"),
+                    "rank": st.column_config.NumberColumn("Rank", format="%d"),
+                },
+            )
+
+    st.header("Distribuições da linha selecionada")
+    # Keep a stable default for Section 2 so unrelated sidebar changes do not
+    # keep changing the selected line and triggering reloads.
+    if "hist_default_line" not in st.session_state:
+        default_line = get_default_riskiest_line(tables_by_dr)
+        st.session_state["hist_default_line"] = default_line
+    else:
+        default_line = st.session_state["hist_default_line"]
+
+    if default_line is None:
+        st.warning("Não há dados de linhas disponíveis para os filtros selecionados.")
+        st.stop()
+
+    line_options = sorted(df["linha"].dropna().astype(str).unique().tolist())
+    default_index = line_options.index(default_line) if default_line in line_options else 0
+    selected_line = st.selectbox(
+        "Selecione a linha",
+        options=line_options,
+        index=default_index,
+        key="hist_selected_line",
+    )
+
+    percentile_limits = get_percentile_limits_c_for_line(selected_line)
+    if not percentile_limits:
+        st.warning("Não foi possível determinar os limites percentuais (P90/P95/P99) para a linha selecionada.")
+        st.stop()
+
+    # st.caption(
+    #     "Limites percentuais desta linha: "
+    #     + ", ".join(f"{k}={v:.2f} °C" for k, v in percentile_limits.items())
+    # )
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Limite P90 (°C)", f"{percentile_limits.get('P90', np.nan):.2f}")
+    col2.metric("Limite P95 (°C)", f"{percentile_limits.get('P95', np.nan):.2f}")
+    col3.metric("Limite P99 (°C)", f"{percentile_limits.get('P99', np.nan):.2f}")
+
+    hist = load_histograms()
+    if not hist:
+        st.warning(
+            f"Arquivo de histogramas não encontrado`. "
+            "Rode `python scripts/precompute_temp_histograms.py` para gerá-lo."
+        )
+        st.stop()
+
+    bin_edges = hist["bin_edges"]
+    bin_widths = np.diff(bin_edges)
+
+    fig, axes = plt.subplots(len(DATE_RANGES), 1, figsize=(11, 4 * len(DATE_RANGES)), sharex=True)
+    if len(DATE_RANGES) == 1:
+        axes = [axes]
+
+    percentile_styles = {
+        "P90": {"color": "black", "linestyle": "--"},
+        "P95": {"color": "dimgray", "linestyle": "-."},
+        "P99": {"color": "gray", "linestyle": ":"},
+    }
+
+    for ax, dr in zip(axes, DATE_RANGES):
+        any_data = False
+        for scenario in SCENARIOS:
+            entry = _get_hist_counts(hist, selected_line, scenario, dr)
+            if entry is None:
+                continue
+            counts, total = entry
+            density = counts / (total * bin_widths)
+            ax.step(bin_edges[:-1], density, where="post", linewidth=1.6, label=scenario)
+            any_data = True
+
+        for p_name, p_val in percentile_limits.items():
+            style = percentile_styles.get(p_name, {"color": "black", "linestyle": "--"})
+            ax.axvline(
+                p_val,
+                color=style["color"],
+                linestyle=style["linestyle"],
+                linewidth=1.5,
+                label=f"{p_name} ({p_val:.2f} ºC)",
+            )
+
+        ax.set_title(f"{selected_line} | Distribuição de temperaturas máximas diárias ({dr})")
+        ax.set_ylabel("Densidade")
+        ax.grid(alpha=0.15)
+        if any_data:
+            ax.legend(loc="upper left", ncols=2, title="Cenários e limiares")
+        else:
+            ax.text(0.5, 0.5, "Sem dados disponíveis", ha="center", va="center", transform=ax.transAxes)
+
+    fig.suptitle(
+        f"Distribuições de temperatura máxima diária na linha {selected_line}",
+        fontsize=14,
+        y=1.02,
+    )
+    axes[-1].set_xlabel("Temperatura máxima diária (°C)")
+    fig.tight_layout()
+    st.pyplot(fig)
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()
