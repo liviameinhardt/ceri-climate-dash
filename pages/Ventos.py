@@ -8,27 +8,43 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-
 RISK_DIR = Path("processed_data/wind")
 
 RISK_FILES = {
-    "P90": RISK_DIR / "risk_table_P90.csv",
-    "P95": RISK_DIR / "risk_table_P95.csv",
-    "P99": RISK_DIR / "risk_table_P99.csv",
+    "local": {
+        "P90": RISK_DIR / "risk_table_P90.csv",
+        "P95": RISK_DIR / "risk_table_P95.csv",
+        "P99": RISK_DIR / "risk_table_P99.csv",
+    },
+    "global": {
+        "P90": RISK_DIR / "risk_table_P90_global.csv",
+        "P95": RISK_DIR / "risk_table_P95_global.csv",
+        "P99": RISK_DIR / "risk_table_P99_global.csv",
+    },
 }
 HIST_FILE = RISK_DIR / "histograms.npz"
 
 SCENARIOS = ["SSP1-2.6", "SSP2-4.5", "SSP3-7.0"]
 DATE_RANGES = ["2021-2040", "2031-2050", "2041-2060"]
 
+MODE_LABELS = {
+    "local": "Local (percentil por linha)",
+    "global": "Global (percentil único do Brasil)",
+}
+
 
 @st.cache_data(show_spinner=False)
 def _load_risk_table_cached(path_str: str, mtime: float) -> pd.DataFrame:
-    return pd.read_csv(path_str)
+    df = pd.read_csv(path_str)
+    # The global tables were written with temperature-style column names.
+    # Normalize to the wind schema expected by the rest of the page.
+    if "limit_ms" not in df.columns and "limit_K" in df.columns:
+        df = df.rename(columns={"limit_K": "limit_ms"}).drop(columns=["limit_C"], errors="ignore")
+    return df
 
 
-def load_risk_table(limit_name: str) -> pd.DataFrame:
-    path = RISK_FILES[limit_name]
+def load_risk_table(limit_name: str, mode: str = "local") -> pd.DataFrame:
+    path = RISK_FILES[mode][limit_name]
     if not path.exists():
         raise FileNotFoundError(f"Missing file: {path}")
     return _load_risk_table_cached(str(path), path.stat().st_mtime)
@@ -139,10 +155,10 @@ def get_line_percentile_limit_ms(df: pd.DataFrame, line_name: str) -> float | No
     return float(vals.iloc[0])
 
 
-def get_percentile_limits_ms_for_line(line_name: str) -> dict[str, float]:
+def get_percentile_limits_ms_for_line(line_name: str, mode: str = "local") -> dict[str, float]:
     limits = {}
     for name in ["P90", "P95", "P99"]:
-        df_lim = load_risk_table(name)
+        df_lim = load_risk_table(name, mode=mode)
         v = get_line_percentile_limit_ms(df_lim, line_name)
         if v is not None:
             limits[name] = v
@@ -168,7 +184,39 @@ def main() -> None:
     st.set_page_config(page_title="Painel de Risco de Ventos", layout="wide")
     st.title("Painel de Risco de Ventos")
 
+    st.markdown(
+        """
+        Este painel permite comparar a exposição das linhas de transmissão a extremos de
+        **vento máximo diário** sob diferentes cenários climáticos futuros. Use o
+        seletor da barra lateral para alternar entre dois critérios de limiar:
+
+        - **Local (percentil por linha):** cada linha usa como limiar o seu próprio
+          percentil (P90/P95/P99) histórico (1995–2014). Responde à pergunta *"quantos
+          dias no futuro a linha ultrapassa o que, para ela mesma, era um extremo?"*.
+          Útil para avaliar **mudança local** em relação ao passado.
+        - **Global (percentil único do Brasil):** o limiar P90/P95/P99 é calculado sobre
+          a distribuição conjunta de todas as linhas no histórico, e o mesmo valor (em
+          m/s) é aplicado a todas. Responde à pergunta *"quais linhas estão expostas aos
+          ventos mais intensos em termos absolutos?"*. Útil para **ranquear linhas
+          entre si** com um critério comum.
+        """
+    )
+
     st.sidebar.header("Filtros")
+    mode = st.sidebar.radio(
+        "Modo do limiar de percentil",
+        options=["local", "global"],
+        format_func=lambda m: MODE_LABELS[m],
+        index=0,
+        key="vento_mode",
+        help=(
+            "Local: o limiar P90/P95/P99 é calculado individualmente para cada linha "
+            "a partir do seu próprio histórico — mede mudança em relação ao passado "
+            "daquela linha. "
+            "Global: o limiar é único para o Brasil (calculado sobre todas as linhas "
+            "no histórico) — permite comparar linhas entre si em termos absolutos."
+        ),
+    )
     limit_name = st.sidebar.selectbox(
         "Percentil do limite de vento",
         options=["P90", "P95", "P99"],
@@ -200,7 +248,7 @@ def main() -> None:
         f"SSP3-7.0={weights['SSP3-7.0']:.2f}"
     )
 
-    df = load_risk_table(limit_name)
+    df = load_risk_table(limit_name, mode=mode)
     tables_by_dr = build_tables_by_date_range(df, weights)
 
     st.header("Rank das linhas por excedência ponderada")
@@ -275,16 +323,17 @@ def main() -> None:
     hist = load_histograms()
     if not hist:
         st.warning(
-            f"Arquivo de histogramas não encontrado. "
+            f"Arquivo de histogramas não encontrado em `{HIST_FILE.relative_to(ROOT)}`. "
             "Rode `python scripts/precompute_wind_histograms.py` para gerá-lo."
         )
         st.stop()
 
-    if "vento_hist_default_line" not in st.session_state:
+    default_key = f"vento_hist_default_line__{mode}"
+    if default_key not in st.session_state:
         default_line = get_default_riskiest_line(tables_by_dr)
-        st.session_state["vento_hist_default_line"] = default_line
+        st.session_state[default_key] = default_line
     else:
-        default_line = st.session_state["vento_hist_default_line"]
+        default_line = st.session_state[default_key]
 
     if default_line is None:
         st.warning("Não há dados de linhas disponíveis para os filtros selecionados.")
@@ -299,7 +348,7 @@ def main() -> None:
         key="vento_hist_selected_line",
     )
 
-    percentile_limits = get_percentile_limits_ms_for_line(selected_line)
+    percentile_limits = get_percentile_limits_ms_for_line(selected_line, mode=mode)
     if not percentile_limits:
         st.warning("Não foi possível determinar os limites percentuais (P90/P95/P99) para a linha selecionada.")
         st.stop()
