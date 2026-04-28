@@ -47,21 +47,29 @@ def load_risk_table(limit_name: str, mode: str = "local") -> pd.DataFrame:
 
 
 @st.cache_resource(show_spinner=False)
-def load_histograms() -> dict:
-    if not HIST_FILE.exists():
-        return {}
-    data = np.load(HIST_FILE, allow_pickle=True)
-    lines = list(data["lines"])
-    combos = list(data["combos"])
+def _load_histograms_cached(path_str: str, mtime: float) -> dict:
+    with open(path_str, "rb") as f:
+        data = np.load(f, allow_pickle=False)
+        lines = [str(x) for x in data["lines"].tolist()]
+        combos = [str(x) for x in data["combos"].tolist()]
+        counts = np.asarray(data["counts"])
+        bin_edges = np.asarray(data["bin_edges"], dtype=np.float64)
+        total_samples = np.asarray(data["total_samples"])
     return {
         "lines": lines,
         "combos": combos,
         "line_to_idx": {name: i for i, name in enumerate(lines)},
         "combo_to_idx": {label: j for j, label in enumerate(combos)},
-        "counts": data["counts"],
-        "bin_edges": data["bin_edges"],
-        "total_samples": data["total_samples"],
+        "counts": counts,
+        "bin_edges": bin_edges,
+        "total_samples": total_samples,
     }
+
+
+def load_histograms() -> dict:
+    if not HIST_FILE.exists():
+        return {}
+    return _load_histograms_cached(str(HIST_FILE), HIST_FILE.stat().st_mtime)
 
 
 def _get_hist_counts(hist: dict, line_name: str, scenario_label: str, date_range: str):
@@ -345,7 +353,7 @@ def main() -> None:
     hist = load_histograms()
     if not hist:
         st.warning(
-            f"Arquivo de histogramas não encontrado em `{HIST_FILE.relative_to(ROOT)}`. "
+            f"Arquivo de histogramas não encontrado em `{HIST_FILE}`. "
             "Rode `python scripts/precompute_temp_histograms.py` para gerá-lo."
         )
         st.stop()
