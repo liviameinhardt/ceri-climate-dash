@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import gzip
+import pickle
 from pathlib import Path
 import sys
 
@@ -10,20 +12,7 @@ import streamlit as st
 
 
 RISK_DIR = Path("processed_data/temperature")
-
-RISK_FILES = {
-    "local": {
-        "P90": RISK_DIR / "risk_table_P90.csv",
-        "P95": RISK_DIR / "risk_table_P95.csv",
-        "P99": RISK_DIR / "risk_table_P99.csv",
-    },
-    "global": {
-        "P90": RISK_DIR / "risk_table_P90_global.csv",
-        "P95": RISK_DIR / "risk_table_P95_global.csv",
-        "P99": RISK_DIR / "risk_table_P99_global.csv",
-    },
-}
-HIST_FILE = RISK_DIR / "histograms.npz"
+BUNDLE_FILE = RISK_DIR / "bundle.pkl.gz"
 
 SCENARIOS = ["SSP1-2.6", "SSP2-4.5", "SSP3-7.0"]
 DATE_RANGES = ["2021-2040", "2031-2050", "2041-2060"]
@@ -34,42 +23,37 @@ MODE_LABELS = {
 }
 
 
-@st.cache_data(show_spinner=False)
-def _load_risk_table_cached(path_str: str, mtime: float) -> pd.DataFrame:
-    return pd.read_csv(path_str)
+@st.cache_resource(show_spinner=False)
+def _load_bundle_cached(path_str: str, mtime: float) -> dict:
+    with gzip.open(path_str, "rb") as f:
+        bundle = pickle.load(f)
+    h = bundle["hist"]
+    bundle["hist"] = {
+        "lines": h["lines"],
+        "combos": h["combos"],
+        "line_to_idx": {name: i for i, name in enumerate(h["lines"])},
+        "combo_to_idx": {label: j for j, label in enumerate(h["combos"])},
+        "counts": h["counts"],
+        "bin_edges": h["bin_edges"],
+        "total_samples": h["total_samples"],
+    }
+    return bundle
+
+
+def _load_bundle() -> dict:
+    if not BUNDLE_FILE.exists():
+        raise FileNotFoundError(f"Missing file: {BUNDLE_FILE}")
+    return _load_bundle_cached(str(BUNDLE_FILE), BUNDLE_FILE.stat().st_mtime)
 
 
 def load_risk_table(limit_name: str, mode: str = "local") -> pd.DataFrame:
-    path = RISK_FILES[mode][limit_name]
-    if not path.exists():
-        raise FileNotFoundError(f"Missing file: {path}")
-    return _load_risk_table_cached(str(path), path.stat().st_mtime)
-
-
-@st.cache_resource(show_spinner=False)
-def _load_histograms_cached(path_str: str, mtime: float) -> dict:
-    with open(path_str, "rb") as f:
-        data = np.load(f, allow_pickle=False)
-        lines = [str(x) for x in data["lines"].tolist()]
-        combos = [str(x) for x in data["combos"].tolist()]
-        counts = np.asarray(data["counts"])
-        bin_edges = np.asarray(data["bin_edges"], dtype=np.float64)
-        total_samples = np.asarray(data["total_samples"])
-    return {
-        "lines": lines,
-        "combos": combos,
-        "line_to_idx": {name: i for i, name in enumerate(lines)},
-        "combo_to_idx": {label: j for j, label in enumerate(combos)},
-        "counts": counts,
-        "bin_edges": bin_edges,
-        "total_samples": total_samples,
-    }
+    return _load_bundle()["risk_tables"][(mode, limit_name)]
 
 
 def load_histograms() -> dict:
-    if not HIST_FILE.exists():
+    if not BUNDLE_FILE.exists():
         return {}
-    return _load_histograms_cached(str(HIST_FILE), HIST_FILE.stat().st_mtime)
+    return _load_bundle()["hist"]
 
 
 def _get_hist_counts(hist: dict, line_name: str, scenario_label: str, date_range: str):
@@ -353,7 +337,7 @@ def main() -> None:
     hist = load_histograms()
     if not hist:
         st.warning(
-            f"Arquivo de histogramas não encontrado em `{HIST_FILE}`. "
+            f"Arquivo de histogramas não encontrado em `{BUNDLE_FILE}`. "
             "Rode `python scripts/precompute_temp_histograms.py` para gerá-lo."
         )
         st.stop()
