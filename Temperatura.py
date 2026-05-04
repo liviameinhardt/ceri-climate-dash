@@ -357,6 +357,19 @@ def main() -> None:
 
     for ax, dr in zip(axes, DATE_RANGES):
         any_data = False
+        hist_entry = _get_hist_counts(hist, selected_line, "historical", "1995-2014")
+        if hist_entry is not None:
+            counts, total = hist_entry
+            density = counts / (total * bin_widths)
+            ax.step(
+                bin_edges[:-1],
+                density,
+                where="post",
+                linewidth=1.8,
+                color="black",
+                label="Histórico (1995-2014)",
+            )
+            any_data = True
         for scenario in SCENARIOS:
             entry = _get_hist_counts(hist, selected_line, scenario, dr)
             if entry is None:
