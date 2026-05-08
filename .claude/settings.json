@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import pandas as pd; df = pd.read_parquet\\('processed_data/raios/all_lines_daily_cg.parquet'\\); print\\(df.shape\\); print\\(df.dtypes\\); print\\(df.head\\(\\)\\)\")"
+    ]
+  }
+}
