@@ -188,6 +188,14 @@ def _plot_density_step(
     return True
 
 
+def _density_upper_edge(bin_edges: np.ndarray, density: np.ndarray) -> float | None:
+    positive_idx = np.flatnonzero(np.isfinite(density) & (density > 0))
+    if positive_idx.size == 0:
+        return None
+    last_bin = int(positive_idx[-1])
+    return float(bin_edges[last_bin + 1])
+
+
 def main() -> None:
     st.set_page_config(page_title="Painel de Risco de Ventos", layout="wide")
     st.title("Painel de Risco de Ventos")
@@ -381,6 +389,7 @@ def main() -> None:
 
     for ax, dr in zip(axes, DATE_RANGES):
         any_data = False
+        x_candidates = []
         hist_entry = _get_hist_counts(hist, selected_line, "historical", "1995-2014")
         if hist_entry is not None:
             counts, total = hist_entry
@@ -393,6 +402,9 @@ def main() -> None:
                 color="black",
                 label="Histórico (1995-2014)",
             ) or any_data
+            x_max_hist = _density_upper_edge(bin_edges, density)
+            if x_max_hist is not None:
+                x_candidates.append(x_max_hist)
         for scenario in SCENARIOS:
             entry = _get_hist_counts(hist, selected_line, scenario, dr)
             if entry is None:
@@ -406,6 +418,9 @@ def main() -> None:
                 linewidth=1.6,
                 label=scenario,
             ) or any_data
+            x_max_scenario = _density_upper_edge(bin_edges, density)
+            if x_max_scenario is not None:
+                x_candidates.append(x_max_scenario)
 
         for p_name, p_val in percentile_limits.items():
             style = percentile_styles.get(p_name, {"color": "black", "linestyle": "--"})
@@ -425,14 +440,18 @@ def main() -> None:
         else:
             ax.text(0.5, 0.5, "Sem dados disponíveis", ha="center", va="center", transform=ax.transAxes)
 
+        x_candidates.extend(float(v) for v in percentile_limits.values() if pd.notna(v))
+        if x_candidates:
+            x_max = max(x_candidates)
+            pad = max(0.5, 0.05 * x_max)
+            ax.set_xlim(0, min(float(bin_edges[-1]), x_max + pad))
+
     fig.suptitle(
         f"Distribuições do vento máximo diário na linha {selected_line}",
         fontsize=14,
         y=1.02,
     )
     axes[-1].set_xlabel("Vento máximo diário (m/s)")
-    for ax in axes:
-        ax.set_xlim(0, float(bin_edges[-1]))
 
     fig.tight_layout()
     st.pyplot(fig)
