@@ -34,8 +34,11 @@ def load_predictions() -> pd.DataFrame:
         st.error(f"Arquivo nao encontrado: {PRED_FILE}")
         return pd.DataFrame()
     df = pd.read_parquet(PRED_FILE)
-    df["scenario"] = df["scenario"].map(SCENARIO_MAP).fillna(df["scenario"])
-    df["date"] = pd.to_datetime(df["date"])
+    # Evita conflito de categorias ao fazer map/fillna quando a coluna vem como Categorical.
+    scenario_raw = df["scenario"].astype("string")
+    df["scenario"] = scenario_raw.map(SCENARIO_MAP).fillna(scenario_raw).astype(str)
+    if "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"])
     return df
 
 
@@ -118,6 +121,22 @@ def get_default_riskiest_line(tables: dict[str, pd.DataFrame]) -> str | None:
         return None
     s = pd.concat(parts).groupby("line_name")["weighted_score"].sum().sort_values(ascending=False)
     return None if s.empty else str(s.index[0])
+
+
+def _plot_density_step(
+    ax,
+    bin_edges: np.ndarray,
+    density: np.ndarray,
+    *,
+    label: str,
+    **kwargs,
+) -> bool:
+    positive = np.isfinite(density) & (density > 0)
+    if not np.any(positive):
+        return False
+    y = np.where(positive, density, np.nan)
+    ax.step(bin_edges[:-1], y, where="post", label=label, **kwargs)
+    return True
 
 
 def main() -> None:
@@ -296,9 +315,14 @@ def main() -> None:
             vals = df_line.loc[mask, "proba"].to_numpy()
             if vals.size == 0:
                 continue
-            counts, _ = np.histogram(vals, bins=bin_edges, density=True)
-            ax.step(bin_edges[:-1], counts, where="post", linewidth=1.6, label=scenario)
-            any_data = True
+            density, _ = np.histogram(vals, bins=bin_edges, density=True)
+            any_data = _plot_density_step(
+                ax,
+                bin_edges,
+                density,
+                linewidth=1.6,
+                label=scenario,
+            ) or any_data
 
         ax.axvline(line_thr, color="black", linestyle="--", linewidth=1.5,
                    label=f"limiar ({line_thr:.3f})")

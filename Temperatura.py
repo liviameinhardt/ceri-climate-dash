@@ -69,6 +69,22 @@ def _get_hist_counts(hist: dict, line_name: str, scenario_label: str, date_range
     return counts, total
 
 
+def _plot_density_step(
+    ax,
+    bin_edges: np.ndarray,
+    density: np.ndarray,
+    *,
+    label: str,
+    **kwargs,
+) -> bool:
+    positive = np.isfinite(density) & (density > 0)
+    if not np.any(positive):
+        return False
+    y = np.where(positive, density, np.nan)
+    ax.step(bin_edges[:-1], y, where="post", label=label, **kwargs)
+    return True
+
+
 def build_first_section_table(
     df: pd.DataFrame, weights: dict[str, float], date_range: str
 ) -> pd.DataFrame:
@@ -361,23 +377,27 @@ def main() -> None:
         if hist_entry is not None:
             counts, total = hist_entry
             density = counts / (total * bin_widths)
-            ax.step(
-                bin_edges[:-1],
+            any_data = _plot_density_step(
+                ax,
+                bin_edges,
                 density,
-                where="post",
                 linewidth=1.8,
                 color="black",
                 label="Histórico (1995-2014)",
-            )
-            any_data = True
+            ) or any_data
         for scenario in SCENARIOS:
             entry = _get_hist_counts(hist, selected_line, scenario, dr)
             if entry is None:
                 continue
             counts, total = entry
             density = counts / (total * bin_widths)
-            ax.step(bin_edges[:-1], density, where="post", linewidth=1.6, label=scenario)
-            any_data = True
+            any_data = _plot_density_step(
+                ax,
+                bin_edges,
+                density,
+                linewidth=1.6,
+                label=scenario,
+            ) or any_data
 
         for p_name, p_val in percentile_limits.items():
             style = percentile_styles.get(p_name, {"color": "black", "linestyle": "--"})
